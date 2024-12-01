@@ -9,7 +9,7 @@ using EasyDiet.Core.Services;
 
 namespace EasyDiet.Services
 {
-    public class CustomerServices:ICustomerServices
+    public class CustomerServices : ICustomerServices
     {
         private readonly ICustomerRepository _customerRepository;
 
@@ -17,9 +17,21 @@ namespace EasyDiet.Services
         {
             _customerRepository = customerRepository;
         }
-        public List<Customer> GetAll()
+        public Customer GetById(int id)
         {
-            return _customerRepository.GetList();
+            return _customerRepository.GetById(id);
+        }
+        public int AddCustomer(int id, string name, int codeDiet)
+        {
+            return _customerRepository.AddCustomer(id, name, codeDiet);
+        }
+        public int ChangeCustomer(int id, string name, int codeDiet, bool status)
+        {
+            return _customerRepository.ChangeCustomer(id, name, codeDiet, status);
+        }
+        public int RemoveCustomer(int id)
+        {
+            return _customerRepository.RemoveCustomer(id);
         }
     }
 }

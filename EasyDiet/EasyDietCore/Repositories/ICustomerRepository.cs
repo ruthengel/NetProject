@@ -9,6 +9,10 @@ namespace EasyDiet.Core.Repositories
 {
     public interface ICustomerRepository
     {
-        public List<Customer> GetList();
+        public Customer GetById(int id);
+        public int AddCustomer(int id, string name, int codeDiet);
+        public int ChangeCustomer(int id, string name, int codeDiet, bool status);
+        public int RemoveCustomer(int id);
+
     }
 }

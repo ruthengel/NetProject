@@ -13,25 +13,26 @@ namespace EasyDiet.Api.Controllers
     public class DietController : ControllerBase
     {
         private readonly IDietServices _service;
-        private readonly ICoachServices _coachService;
         public DietController(IDietServices service, ICoachServices coachService)
         {
             _service = service;
-            _coachService = coachService;
         }
 
         //GET
         [HttpGet]
-        public List<Diet> Get()
+        public ActionResult<List<Diet>> Get()
         {
-            return _service.GetAll();
+            return Ok(_service.GetList());
         }
 
         //GET BY PRICE
         [HttpGet("{price}")]
-        public List<Diet> Get([FromQuery] int price)
+        public ActionResult<List<Diet>> Get(/*[FromQuery]*/ int price)
         {
-            return _service.GetAll().FindAll(d => d.Price <= price);
+            List<Diet> result = _service.GetByPrice(price);
+            if (result.Count == 0)
+                return NotFound($"No diets found within the requested range.");
+            return Ok(result);
         }
 
         //GET BY CODE
@@ -52,44 +53,30 @@ namespace EasyDiet.Api.Controllers
         [HttpPost]
         public ActionResult Post(string name, double price, int idcoach)
         {
-            Coach coach = _coachService.GetAll().FirstOrDefault(c => c.Id == idcoach);
-            if (coach is null)
-                return NotFound();
-            if (coach.Status)
-            {
-                Diet diet = new Diet(name, price, idcoach);
-                coach.MyDiets.Add(diet);
-                _service.GetAll().Add(diet);
-            }
-            return Ok();
+            int result = _service.AddDiet(name, price, idcoach);
+            if (result == -1)
+                return NotFound("Sorry, The addition failed, please make sure the details you entered are correct.");
+            return Ok($"The addition was successful.");
         }
 
         // PUT
-        [HttpPut("{code}")]
-        public ActionResult Put(int id, [FromBody] string name, double price)
+        [HttpPut("{id}")]
+        public ActionResult Put(int id,string name, double price)
         {
-
-            Diet diet = _service.GetAll().Find(d => d.Code == id);
-            if (diet is null)
-                return NotFound();
-            if (diet.Status)
-            {
-                diet.Name = name;
-                diet.Price = price;
-            }
-            return Ok();
+            int result = _service.ChangeDiet(id, name, price);
+            if (result == -1)
+                return NotFound($"The update failed, please make sure the details you entered are correct.");
+            return Ok($"The update was successful.");
         }
 
         // DELETE 
-        [HttpDelete("{code}")]
+        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-
-            Diet d = _service.GetAll().Find(d => d.Code == id);
-            if (d is null)
-                return NotFound();
-            d.Status = false;
-            return Ok();
+            int result = _service.RemoveDiet(id);
+            if (result == -1)
+                return NotFound($"The removal failed, please make sure the details you entered are correct.");
+            return Ok($"The removal was successful.");
         }
     }
 }

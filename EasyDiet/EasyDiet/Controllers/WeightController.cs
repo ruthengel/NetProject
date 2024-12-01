@@ -11,28 +11,31 @@ namespace EasyDiet.Api.Controllers
     [ApiController]
     public class WeightController : ControllerBase
     {
-        private readonly CustomerServices _service;
+        private readonly WeightServices _service;
 
-        public WeightController(CustomerServices service)
+        public WeightController(WeightServices service)
         {
             _service = service;
         }
 
         // GET 
         [HttpGet("{id}")]
-        public List<Weight> Get(int id)
+        public ActionResult<List<Weight>> Get(int id)
         {
-            return _service.GetAll().FirstOrDefault(c => c.Id == id).MyWeigths;
+            int result = _service.GetById(id);
+            if (result == -1)
+                return NotFound($"The customer with the requested ID: {id} does not exist.");
+            return Ok(result);
         }
 
         // POST 
         [HttpPost]
-        public void Post(int id, double weight)
+        public ActionResult Post(int id, double weight)
         {
-
-            Customer c = _service.GetAll().FirstOrDefault(c => c.Id == id);
-            if (c != null)
-                c.MyWeigths.Add(new Weight(DateTime.Now, weight));
+            int result = _service.AddWeight(id, weight);
+            if (result == -1)
+                return NotFound("Sorry, The addition failed, please make sure the details you entered are correct.");
+            return Ok($"The addition was successful.");
         }
     }
 }

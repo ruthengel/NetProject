@@ -10,5 +10,9 @@ namespace EasyDiet.Core.Repositories
     public interface IDietRepository
     {
         public List<Diet> GetList();
+        public List<Diet> GetByPrice(int price);
+        public int AddDiet(string name, double price, int idcoach);
+        public int ChangeDiet(int id, string name, double price);
+        public int RemoveDiet(int id);
     }
 }

@@ -22,54 +22,48 @@ namespace EasyDiet.Api.Controllers
 
         // GET
         [HttpGet]
-        public List<Coach> Get()
+        public ActionResult<List<Coach>> Get()
         {
-            return _service.GetAll();
+            return Ok(_service.GetList());
         }
 
         // GET BY ID
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            Coach c = _service.GetAll().Find(c => c.Id == id);
+            Coach c = _service.GetById(id);
             if (c is null)
-                return NotFound();
-            return Ok();
+            {
+                return NotFound($"Id: {id} is not exists");
+            }
+            return Ok(c);
         }
 
         // POST 
         [HttpPost("  After registration, add your diet course to the diet database")]
         public void Post(int id, string name, string city, string phone)
         {
-            _service.GetAll().Add(new Coach(id, name, city, phone));
+            _service.AddCoach(id, name, city, phone);
         }
 
         // PUT 
         [HttpPut("{id}")]
         public ActionResult Put(int id, string Name, string city, string phone, bool status)
         {
-
-            Coach coach = _service.GetAll().FirstOrDefault(c => c.Id.Equals(id));
-            if (coach is null)
-                return NotFound();
-            coach.City = city;
-            coach.Phone = phone;
-            coach.Name = Name;
-            coach.Status = status;
-            return Ok();
+            int result = _service.ChangeCoach(id, Name, city, phone, status);
+            if (result == -1)
+                return NotFound("Sorry, The update failed, please make sure the details you entered are correct.");
+            return Ok($"The upadte was successful.");
         }
 
         // DELETE 
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-
-            Coach coach = _service.GetAll().Find(c => c.Id.Equals(id));
-            if (coach is null)
-                return NotFound();
-            coach.Status = false;
-            coach.MyDiets.ForEach(d => d.Status = false);
-            return Ok();
+            int result = _service.RemoveCoach(id);
+            if (result == -1)
+                return NotFound($"The removal failed, please make sure the details you entered are correct.");
+            return Ok($"The removal was successful.");
         }
 
 

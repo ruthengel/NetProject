@@ -18,10 +18,25 @@ namespace EasyDiet.Services
         {
             _coachRepository = coachRepository;
         }
-        public List<Coach> GetAll()
+        public List<Coach> GetList()
         {
             return _coachRepository.GetList();
         }
-
+        public Coach GetById(int id)
+        {
+            return _coachRepository.GetById(id);
+        }
+        public void AddCoach(int id, string name, string city, string phone)
+        {
+            _coachRepository.AddCoach(id, name, city, phone);
+        }
+        public int ChangeCoach(int id, string Name, string city, string phone, bool status)
+        {
+            return _coachRepository.ChangeCoach(id, Name, city, phone, status);
+        }
+        public int RemoveCoach(int id)
+        {
+            return _coachRepository.RemoveCoach(id);
+        }
     }
 }

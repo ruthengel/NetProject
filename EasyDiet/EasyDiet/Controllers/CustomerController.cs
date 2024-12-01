@@ -3,6 +3,7 @@ using EasyDiet.Core.Models;
 using EasyDiet.Core.Services;
 using EasyDiet.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,76 +14,52 @@ namespace EasyDiet.Api.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerServices _service;
-        private readonly ICoachServices _coachservice;
-        private readonly IDietServices _dietservice;
-        public CustomerController(ICustomerServices service, ICoachServices coachservice, IDietServices dietservice)
+        public CustomerController(ICustomerServices service)
         {
             _service = service;
-            _coachservice = coachservice;
-            _dietservice = dietservice;
         }
 
         // GET 
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            Customer c = _service.GetAll().Find(c => c.Id == id);
+            Customer c = _service.GetById(id);
             if (c is null)
             {
-                return NotFound();
+                return NotFound($"Id: {id} is not exists");
             }
             return Ok(c);
         }
 
         // POST 
         [HttpPost]
-        public void Post(int id, string name, int codeDiet)
+        public ActionResult Post(int id, string name, int codeDiet)
         {
-            Diet diet = _dietservice.GetAll().Find(d => d.Code == codeDiet);
-            if (diet != null && diet.Status)
-            {
-                Coach coach = _coachservice.GetAll().FirstOrDefault(c => c.Id == diet.Coach);
-                Customer customer = new Customer(id, name, diet);
-                _service.GetAll().Add(customer);
-                _coachservice.GetAll().Find(c => coach.Id == c.Id).MyCustomers.Add(customer);
-            }
+            int result = _service.AddCustomer(id, name, codeDiet);
+            if (result == -1)
+                return NotFound("Sorry, The addition failed, please make sure the details you entered are correct.");
+            return Ok($"The addition was successful.");
         }
 
         // PUT 
         [HttpPut("{id}")]
-        public void Put(int id, string name, int codeDiet, bool status)
+        public ActionResult Put(int id, string name, int codeDiet, bool status)
         {
-            Customer customer = _service.GetAll().FirstOrDefault(c => c.Id == id);
-            Diet diet = _dietservice.GetAll().FirstOrDefault(d => d.Code == codeDiet);
-            if (customer != null && diet != null && diet.Status)
-            {
-                customer.Id = id;
-                customer.Name = name;
-                customer.Status = status;
-                diet.Code = codeDiet;
-                if (diet.Coach != customer.MyDiet.Coach)
-                {
-                    Coach coach = _coachservice.GetAll().FirstOrDefault(c => c.Id == customer.MyDiet.Coach);
-                    coach.MyCustomers.Remove(customer);
-                    coach.MyCustomers.Add(customer);
-                }
-                customer.MyDiet = diet;
-
-            }
+            int result = _service.ChangeCustomer(id, name, codeDiet, status);
+            if (result == -1)
+                return NotFound($"The update failed, please make sure the details you entered are correct.");
+            return Ok($"The update was successful.");
         }
 
 
         // DELETE 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-            Customer customer = _service.GetAll().FirstOrDefault(c => c.Id == id);
-            if (customer != null)
-            {
-                Coach coach = _coachservice.GetAll().FirstOrDefault(c => c.Id == customer.MyDiet.Coach);
-                customer.Status = false;
-                coach.MyCustomers.Remove(customer);
-            }
+            int result = _service.RemoveCustomer(id);
+            if (result == -1)
+                return NotFound($"The removal failed, please make sure the details you entered are correct.");
+            return Ok($"The removal was successful.");
         }
     }
 }

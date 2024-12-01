@@ -23,5 +23,35 @@ namespace EasyDiet.Data.Repositories
         {
             return _context.Coaches;
         }
+        public Coach GetById(int id)
+        {
+            return _context.Coaches.FirstOrDefault(c => c.Id == id);
+        }
+        public void AddCoach(int id, string name, string city, string phone)
+        {
+            _context.Coaches.Add(new Coach(id, name, city, phone));
+        }
+        public int ChangeCoach(int id, string Name, string city, string phone, bool status)
+        {
+
+            Coach coach = _context.Coaches.FirstOrDefault(c => c.Id.Equals(id));
+            if (coach is null)
+                return -1;
+            coach.City = city;
+            coach.Phone = phone;
+            coach.Name = Name;
+            coach.Status = status;
+            return 1;
+        }
+        public int RemoveCoach(int id)
+        {
+
+            Coach coach = _context.Coaches.Find(c => c.Id.Equals(id));
+            if (coach is null)
+                return -1;
+            coach.Status = false;
+            coach.MyDiets.ForEach(d => d.Status = false);
+            return 1;
+        }
     }
 }

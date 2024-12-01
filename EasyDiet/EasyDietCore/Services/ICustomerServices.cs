@@ -9,6 +9,9 @@ namespace EasyDiet.Core.Services
 {
     public interface ICustomerServices
     {
-        public List<Customer> GetAll();
+        public Customer GetById(int id);
+        public int AddCustomer(int id, string name, int codeDiet);
+        public int ChangeCustomer(int id, string name, int codeDiet, bool status);
+        public int RemoveCustomer(int id);
     }
 }
