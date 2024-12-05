@@ -1,5 +1,6 @@
 ﻿using EasyDiet;
 using EasyDiet.Core.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,9 @@ namespace EasyDiet.Core.Interfaces
 {
     public interface IDataContext
     {
-        public List<Customer> Customers { get; set; }
-        public List<Diet> Diets { get; set; }
-        public List<Coach> Coaches { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Diet> Diets { get; set; }
+        public DbSet<Coach> Coaches { get; set; }
         
     }
 }

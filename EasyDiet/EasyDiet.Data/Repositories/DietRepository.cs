@@ -20,11 +20,11 @@ namespace EasyDiet.Data.Repositories
 
         public List<Diet> GetList()
         {
-            return _context.Diets;
+            return _context.Diets.ToList();
         }
         public List<Diet> GetByPrice(int price)
         {
-            return _context.Diets.FindAll(d => d.Price <= price);
+            return _context.Diets.ToList().FindAll(d => d.Price <= price);
         }
         public int AddDiet(string name, double price, int idcoach)
         {
@@ -55,7 +55,7 @@ namespace EasyDiet.Data.Repositories
         public int RemoveDiet(int id)
         {
 
-            Diet d = _context.Diets.Find(d => d.Code == id);
+            Diet d = _context.Diets.ToList().Find(d => d.Code == id);
             if (d is null)
                 return -1;
             d.Status = false;

@@ -13,7 +13,7 @@ namespace EasyDiet.Api.Controllers
     public class DietController : ControllerBase
     {
         private readonly IDietServices _service;
-        public DietController(IDietServices service, ICoachServices coachService)
+        public DietController(IDietServices service)
         {
             _service = service;
         }

@@ -1,6 +1,7 @@
 ﻿using EasyDiet;
 using EasyDiet.Core.Interfaces;
 using EasyDiet.Core.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,21 +12,18 @@ using System.Threading.Tasks;
 
 namespace EasyDiet.Data
 {
-    public class DataContext : IDataContext
+    public class DataContext : DbContext,IDataContext
     {
 
-        public List<Customer> Customers { get; set; }
-        public List<Diet> Diets { get; set; }
-        public List<Coach> Coaches { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Diet> Diets { get; set; }
+        public DbSet<Coach> Coaches { get; set; }
 
-
-        public DataContext()
+       
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            Customers = new List<Customer>();
-            Diets = new List<Diet>();
-            Coaches = new List<Coach>();
-            Coaches.Add(new Coach(1, "ijh", "bbh", "0556894"));
-            Customers.Add(new Customer(1, "gfg", new Diet("ff", 45, 1)));
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=sample_db");
         }
+
     }
 }

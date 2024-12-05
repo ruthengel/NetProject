@@ -21,7 +21,7 @@ namespace EasyDiet.Data.Repositories
 
         public List<Coach> GetList()
         {
-            return _context.Coaches;
+            return _context.Coaches.ToList();
         }
         public Coach GetById(int id)
         {
@@ -46,7 +46,7 @@ namespace EasyDiet.Data.Repositories
         public int RemoveCoach(int id)
         {
 
-            Coach coach = _context.Coaches.Find(c => c.Id.Equals(id));
+            Coach coach = _context.Coaches.ToList().Find(c => c.Id.Equals(id));
             if (coach is null)
                 return -1;
             coach.Status = false;

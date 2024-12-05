@@ -34,7 +34,7 @@ namespace EasyDiet.Data.Repositories
                 return -1;
             Customer customer = new Customer(id, name, diet);
             _context.Customers.Add(customer);
-            _context.Coaches.Find(c => coach.Id == c.Id).MyCustomers.Add(customer);
+            _context.Coaches.ToList().Find(c => coach.Id == c.Id).MyCustomers.Add(customer);
             return 1;
 
         }

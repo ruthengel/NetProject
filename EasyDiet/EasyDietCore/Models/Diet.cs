@@ -1,7 +1,10 @@
-﻿namespace EasyDiet.Core.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EasyDiet.Core.Models
 {
     public class Diet
     {
+        [Key]
         public int Code { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }

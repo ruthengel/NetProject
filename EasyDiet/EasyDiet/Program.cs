@@ -20,7 +20,7 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IDietServices, DietServices>();
 builder.Services.AddScoped<IDietRepository, DietRepository>();
 builder.Services.AddSingleton<IDataContext, DataContext>();
-
+builder.Services.AddDbContext<DataContext>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
