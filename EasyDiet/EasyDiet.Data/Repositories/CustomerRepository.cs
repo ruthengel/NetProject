@@ -11,9 +11,9 @@ namespace EasyDiet.Data.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly IDataContext _context;
+        private readonly DataContext _context;
 
-        public CustomerRepository(IDataContext context)
+        public CustomerRepository(DataContext context)
         {
             _context = context;
         }
@@ -32,9 +32,10 @@ namespace EasyDiet.Data.Repositories
             Coach coach = _context.Coaches.FirstOrDefault(c => c.Id == diet.Coach);
             if (coach is null)
                 return -1;
-            Customer customer = new Customer(id, name, diet);
+            Customer customer = new Customer(id, name, diet.Code);
             _context.Customers.Add(customer);
             _context.Coaches.ToList().Find(c => coach.Id == c.Id).MyCustomers.Add(customer);
+            _context.SaveChanges();
             return 1;
 
         }
@@ -44,19 +45,20 @@ namespace EasyDiet.Data.Repositories
             Diet diet = _context.Diets.FirstOrDefault(d => d.Code == codeDiet);
             if (customer is not null && diet is not null && diet.Status)
             {
+
                 customer.Id = id;
                 customer.Name = name;
                 customer.Status = status;
                 diet.Code = codeDiet;
-                if (diet.Coach != customer.MyDiet.Coach)
-                {
-                    Coach coach = _context.Coaches.FirstOrDefault(c => c.Id == customer.MyDiet.Coach);
-                    if (coach is null)
-                        return -1;
-                    coach.MyCustomers.Remove(customer);
-                    coach.MyCustomers.Add(customer);
-                }
-                customer.MyDiet = diet;
+                //Coach coach = _context.Coaches.FirstOrDefault(c => c.Id == diet.Coach);
+                //if (diet.Coach != customer.MyDiet.Coach)
+                Coach coach = _context.Coaches.FirstOrDefault(c => c.Id == diet.Coach);
+                if (coach is null)
+                    return -1;
+                coach.MyCustomers.Remove(customer);
+                coach.MyCustomers.Add(customer);
+                customer.MyDiet = diet.Code;
+                _context.SaveChanges();
                 return 1;
             }
             else
@@ -67,11 +69,15 @@ namespace EasyDiet.Data.Repositories
             Customer customer = _context.Customers.FirstOrDefault(c => c.Id == id);
             if (customer is null)
                 return -1;
-            Coach coach = _context.Coaches.FirstOrDefault(c => c.Id == customer.MyDiet.Coach);
+            Diet diet = _context.Diets.FirstOrDefault(d => d.Code == customer.MyDiet);
+            if (customer is null)
+                return -1;
+            Coach coach = _context.Coaches.FirstOrDefault(c => c.Id == diet.Coach);
             if (coach is null)
                 return -1;
             customer.Status = false;
             coach.MyCustomers.Remove(customer);
+            _context.SaveChanges();
             return 1;
         }
     }

@@ -11,9 +11,9 @@ namespace EasyDiet.Data.Repositories
 {
     public class DietRepository : IDietRepository
     {
-        private readonly IDataContext _context;
+        private readonly DataContext _context;
 
-        public DietRepository(IDataContext context)
+        public DietRepository(DataContext context)
         {
             _context = context;
         }
@@ -37,11 +37,11 @@ namespace EasyDiet.Data.Repositories
                 coach.MyDiets.Add(diet);
                 _context.Diets.Add(diet);
             }
+            _context.SaveChanges();
             return 1;
         }
         public int ChangeDiet(int id, string name, double price)
         {
-
             Diet diet = _context.Diets.FirstOrDefault(d => d.Code == id);
             if (diet is null)
                 return -1;
@@ -50,15 +50,16 @@ namespace EasyDiet.Data.Repositories
                 diet.Name = name;
                 diet.Price = price;
             }
+            _context.SaveChanges();
             return 1;
         }
         public int RemoveDiet(int id)
         {
-
             Diet d = _context.Diets.ToList().Find(d => d.Code == id);
             if (d is null)
                 return -1;
             d.Status = false;
+            _context.SaveChanges();
             return 1;
         }
     }

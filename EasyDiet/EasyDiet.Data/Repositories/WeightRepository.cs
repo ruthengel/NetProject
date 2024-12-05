@@ -11,9 +11,9 @@ namespace EasyDiet.Data.Repositories
 {
     public class WeightRepository : IWeightRepository
     {
-        private readonly IDataContext _context;
+        private readonly DataContext _context;
 
-        public WeightRepository(IDataContext context)
+        public WeightRepository(DataContext context)
         {
             _context = context;
         }
@@ -30,6 +30,7 @@ namespace EasyDiet.Data.Repositories
             if (customer is null)
                 return -1;
             customer.MyWeigths.Add(new Weight(DateTime.Now, weight));
+            _context.SaveChanges();
             return 1;
         }
     }

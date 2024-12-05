@@ -12,9 +12,9 @@ namespace EasyDiet.Data.Repositories
 {
     public class CoachRepository : ICoachRepository
     {
-        private readonly IDataContext _context;
+        private readonly DataContext _context;
 
-        public CoachRepository(IDataContext context)
+        public CoachRepository(DataContext context)
         {
             _context = context;
         }
@@ -30,6 +30,7 @@ namespace EasyDiet.Data.Repositories
         public void AddCoach(int id, string name, string city, string phone)
         {
             _context.Coaches.Add(new Coach(id, name, city, phone));
+            _context.SaveChanges();
         }
         public int ChangeCoach(int id, string Name, string city, string phone, bool status)
         {
@@ -41,6 +42,7 @@ namespace EasyDiet.Data.Repositories
             coach.Phone = phone;
             coach.Name = Name;
             coach.Status = status;
+            _context.SaveChanges();
             return 1;
         }
         public int RemoveCoach(int id)
@@ -51,6 +53,7 @@ namespace EasyDiet.Data.Repositories
                 return -1;
             coach.Status = false;
             coach.MyDiets.ForEach(d => d.Status = false);
+            _context.SaveChanges();
             return 1;
         }
     }

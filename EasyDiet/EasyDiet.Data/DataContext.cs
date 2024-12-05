@@ -12,18 +12,26 @@ using System.Threading.Tasks;
 
 namespace EasyDiet.Data
 {
-    public class DataContext : DbContext,IDataContext
+    public class DataContext : DbContext, IDataContext
     {
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Diet> Diets { get; set; }
         public DbSet<Coach> Coaches { get; set; }
 
-       
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=sample_db");
         }
 
+        
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Customer>()
+        //        .HasOne(c => c.MyDiet) 
+        //        .WithOne()             
+        //        .HasForeignKey<Diet>(d => d.Code); 
+        //}
     }
 }

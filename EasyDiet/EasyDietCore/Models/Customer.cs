@@ -5,10 +5,10 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public List<Weight> MyWeigths { get; set; }
-        public Diet MyDiet { get; set; }
+        public int MyDiet { get; set; } 
         public bool Status { get; set; }
 
-        public Customer(int id, string name, Diet myDiet)
+        public Customer(int id, string name, int myDiet)
         {
             Id = id;
             Name = name;
@@ -16,5 +16,6 @@
             MyDiet = myDiet;
             Status = true;
         }
+
     }
 }

@@ -14,6 +14,7 @@ namespace EasyDiet.Core.Interfaces
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Diet> Diets { get; set; }
         public DbSet<Coach> Coaches { get; set; }
-        
+
+       
     }
 }
