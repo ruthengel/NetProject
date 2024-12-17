@@ -19,6 +19,8 @@ builder.Services.AddScoped<ICustomerServices, CustomerServices>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IDietServices, DietServices>();
 builder.Services.AddScoped<IDietRepository, DietRepository>();
+builder.Services.AddScoped<IWeightServices, WeightServices>();
+builder.Services.AddScoped<IWeightRepository, WeightRepository>();
 builder.Services.AddSingleton<IDataContext, DataContext>();
 builder.Services.AddDbContext<DataContext>();
 var app = builder.Build();

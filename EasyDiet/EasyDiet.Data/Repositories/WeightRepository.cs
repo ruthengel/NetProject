@@ -17,12 +17,9 @@ namespace EasyDiet.Data.Repositories
         {
             _context = context;
         }
-        public int GetById(int id)
+        public List<Weight> GetById(int id)
         {
-            List<Weight> weights = _context.Customers.FirstOrDefault(c => c.Id == id).MyWeigths;
-            if (weights is null)
-                return -1;
-            return 1;
+            return _context.Customers.FirstOrDefault(c => c.Id == id).MyWeigths;
         }
         public int AddWeight(int id, double weight)
         {

@@ -24,7 +24,16 @@ namespace EasyDiet.Data
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=sample_db");
         }
 
-        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Coach>()
+                .HasKey(c => c.Id); // הגדרה כמפתח ראשי
+
+            modelBuilder.Entity<Coach>()
+                .Property(c => c.Id)
+                .ValueGeneratedNever(); // הערך לא נוצר אוטומטית
+        }
+
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{

@@ -1,5 +1,6 @@
 ﻿using EasyDiet.Core.Interfaces;
 using EasyDiet.Core.Models;
+using EasyDiet.Core.Services;
 using EasyDiet.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,9 @@ namespace EasyDiet.Api.Controllers
     [ApiController]
     public class WeightController : ControllerBase
     {
-        private readonly WeightServices _service;
+        private readonly IWeightServices _service;
 
-        public WeightController(WeightServices service)
+        public WeightController(IWeightServices service)
         {
             _service = service;
         }
@@ -22,9 +23,9 @@ namespace EasyDiet.Api.Controllers
         [HttpGet("{id}")]
         public ActionResult<List<Weight>> Get(int id)
         {
-            int result = _service.GetById(id);
-            if (result == -1)
-                return NotFound($"The customer with the requested ID: {id} does not exist.");
+            List<Weight> result = _service.GetById(id);
+            //if (result.Count == 0)
+            //    return NotFound($"The customer with the requested ID: {id} does not exist.");
             return Ok(result);
         }
 
